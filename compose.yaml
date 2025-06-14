@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: web-nginx
     ports:
-      - "8084:80"
+      - "80:80"
     restart: unless-stopped
     volumes:
       - ./html:/var/www/html
