@@ -1,6 +1,10 @@
+version: "3.8"
+
 services:
   nginx:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: web-nginx
     ports:
       - "8084:80"
@@ -50,3 +54,5 @@ services:
       WORDPRESS_DB_NAME: wordpress_db
     volumes:
       - ./html:/var/www/html
+    ports:
+      - "8000:80"
