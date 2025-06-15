@@ -1,13 +1,18 @@
 FROM ubuntu:22.04
 
-#making non interactive prompts
+# Making non interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-#update package list and run nginx
-RUN apt-get update && apt-get install -y nginx
+# Update package list and install nginx
+RUN apt-get update && apt-get install -y nginx && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-#expose to port 80
+# Create necessary directories
+RUN mkdir -p /var/www/html
+
+# Expose port 80
 EXPOSE 80
 
-#start nginx in foreground
-CMD ["nginx","-g","daemon off;"]
+# Start nginx in foreground
+CMD ["nginx", "-g", "daemon off;"]
