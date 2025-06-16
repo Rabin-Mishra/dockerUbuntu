@@ -9,10 +9,12 @@ services:
       - "8000:80" # Expose HTTP port (Nginx)
     volumes:
       - ./html:/var/www/html # Mount local html directory to container
-      #- ./nginx.conf:/etc/nginx/nginx.conf   # Mount Nginx configuration file
+      - ./nginx.conf:/etc/nginx/nginx.conf   # Mount Nginx configuration file
     networks:
       - docker-network
     restart: unless-stopped
+    depends_on:
+      - wordpress
   db:
     image: mysql:8.0
     restart: always
@@ -28,13 +30,13 @@ services:
     container_name: mysql-container
     networks:
       - docker-network
-    # Resource limits for small EC2 instance
+    # Resource limits for small VM
     deploy:
       resources:
         limits:
-          memory: 200M
+          memory: 1G
         reservations:
-          memory: 128M
+          memory: 512M
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: phpmyadmin
@@ -49,11 +51,10 @@ services:
     networks:
       - docker-network
   wordpress:
-    image: wordpress:latest
+    image: wordpress:php8.1-fpm  # Use FPM version for nginx
     container_name: wordpress-container
     restart: always
-    ports:
-      - "9000:80"
+    # Remove external port mapping - nginx will communicate internally
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wpuser
@@ -65,13 +66,13 @@ services:
       - wordpress:/var/www/html
     networks:
       - docker-network
-    # Resource limits for small EC2 instance
+    # Resource limits for small VM
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 1G
         reservations:
-          memory: 128M
+          memory: 512M
 
 networks:
   docker-network:
