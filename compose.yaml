@@ -8,8 +8,8 @@ services:
     ports:
       - "8000:80" # Expose HTTP port (Nginx)
     volumes:
-      - ./html:/var/www/html # Mount local html directory to container
-      - ./nginx.conf:/etc/nginx/nginx.conf   # Mount Nginx configuration file
+      - wordpress:/var/www/html # Mount WordPress volume (CHANGED)
+      - ./nginx.conf:/etc/nginx/nginx.conf # Mount Nginx configuration file
     networks:
       - docker-network
     restart: unless-stopped
@@ -51,7 +51,7 @@ services:
     networks:
       - docker-network
   wordpress:
-    image: wordpress:php8.1-fpm  # Use FPM version for nginx
+    image: wordpress:php8.1-fpm # Use FPM version for nginx
     container_name: wordpress-container
     restart: always
     # Remove external port mapping - nginx will communicate internally
